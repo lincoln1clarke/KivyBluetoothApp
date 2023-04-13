@@ -1,0 +1,344 @@
+###:kivy
+
+<blankPage>:
+    BoxLayout:
+        Label:
+            text:''
+
+<welcomePage>:
+    okButton: okButton
+    
+    FloatLayout:
+        size: root.width, root.height
+        Label:
+            text:'Welcome!'
+            font_size: 39
+            pos_hint: {'center_x':0.5, 'center_y':0.87}
+        Label:
+            text:'This app allows you to control your RC car through Bluetooth.\nYou can change the settings of the car on the next page.\nOn the control page, you can connect to your\nRoboRoller via Bluetooth and control it.\nIf you have any questions about the settings, see the info page.'
+            halign: 'center'
+            font_size: 21
+            pos_hint: {'center_x':0.5, 'center_y': 0.58}
+        Button:
+            id: okButton
+            text: 'Continue'
+            font_size: 26
+            size_hint: 0.2, 0.13
+            pos_hint: {'center_x':0.5, 'center_y':0.2}
+            on_press: root.okPressed()
+
+<settingsInfoPage>:
+    FloatLayout:
+        size: root.width, root.height
+        Label:
+            text:"Settings"
+            color: 0,1,0.6,1
+            font_size: 33
+            pos_hint:{'center_x':0.5, 'top':1.44}
+        Label:
+            text: "Speed:"
+            pos_hint: {'x':-0.32, 'top':1.32}
+        Label:
+            text:"Speed the RoboRoller drives at relative\nto it's absolute maximum (in percentage).\nDisclaimer: 100% is very fast for indoors.\n40% is recommended."
+            halign: 'center'
+            pos_hint: {'x':0.15, 'top':1.32}
+        Label:
+            text: "Distance per instruction:"
+            pos_hint: {'x':-0.32, 'top':1.14}
+        Label:
+            text:"Distance the RoboRoller will go for each command given.\nOnly applies to forward and backward movements.\nThis variable can change slightly based on speed, so the measurements\nprovided on the settings page may not always be accurate:\nThey are only guidelines."
+            halign: 'center'
+            pos_hint: {'x':0.15, 'top':1.14}
+        Label:
+            text: "Trim:"
+            pos_hint: {'x':-0.32, 'top':0.95}
+        Label:
+            text:"Compensates for the RoboRoller steering in\none direction more than the other.\nIf the robot is going veering left, move this slider towards the right,\nand vice versa.\nTurn trim allows you to adjust the turn size to be 90 degrees (or other)"
+            halign: 'center'
+            pos_hint: {'x':0.15, 'top':0.95}
+        Label:
+            text: "Light On:"
+            pos_hint: {'x':-0.32, 'top':0.82}
+        Label:
+            text:"Dictates whether the headlight of the robot stays on while driving."
+            halign: 'center'
+            pos_hint: {'x':0.15, 'top':0.82}
+        Button:
+            text: "Info about control"
+            size_hint: 0.4, 0.12
+            pos_hint: {'center_x':0.5, 'center_y':0.2}
+            on_press: root.switchToControlInfoPage()
+        GridLayout:
+            cols:2
+            size_hint: 1, 0.14
+            Button:
+                text:"Return to Control"
+                on_press: root.switchToControlPage()
+            Button:
+                text: "Adjust Settings"
+                on_press: root.switchToSettingsPage()
+
+<controlInfoPage>:
+    FloatLayout:
+        size: root.width, root.height
+        Label:
+            text:"Control"
+            color: 0,1,0.6,1
+            font_size: 33
+            pos_hint:{'center_x':0.5, 'top':1.44}
+
+        Label:
+            text: root.instructions
+            halign: 'center'
+            pos_hint: {'center_x': 0.5, 'center_y':0.585}
+
+        Button:
+            text: "Info about settings"
+            size_hint: 0.4, 0.12
+            pos_hint: {'center_x':0.5, 'center_y':0.2}
+            on_press: root.switchToSettingsInfoPage()
+        GridLayout:
+            cols:2
+            size_hint: 1, 0.14
+            Button:
+                text:"Return to Control"
+                on_press: root.switchToControlPage()
+            Button:
+                text: "Adjust Settings"
+                on_press: root.switchToSettingsPage()
+
+<settingsPage>:
+    speedSlider: speedSlider
+    distanceSlider: distanceSlider
+    trimSlider: trimSlider
+    lightOn: lightOnButton
+    turnTimeSlider: turnTrimSlider
+    RelativeLayout:
+        size: root.width, root.height
+        ActionBar:
+            pos_hint: {'center_x':0.5, 'top':1}
+            size_hint: 1, 0.13
+            ActionView:
+                spacing: 0
+                ActionPrevious:
+                    title: "RoboRoller Control App"
+                    app_icon: "AppIcon.png"
+                    with_previous: False
+                ActionButton:
+                    icon: "InfoIcon.png"
+                    on_press: root.switchToSettingsInfoPage()
+                ActionButton:
+                    text: ""
+        GridLayout:
+            cols: 2
+            pos_hint: {'center_x':0.45, 'top':0.885}
+            size_hint_y: 0.79
+            Label:
+                text: 'Speed:'
+            BoxLayout:
+                orientation: 'vertical'
+                Slider:
+                    id: speedSlider
+                    min: 10
+                    max: 100
+                    value: 15
+                    size_hint_y: 0.7
+                GridLayout:
+                    size_hint_y: 0.3
+                    rows:1
+                    Label:
+                        text: '10%'
+                    Label:
+                        text: 'Value: ' + str(int(speedSlider.value))
+                    Label:
+                        text: '100%'
+            Label:
+                text: 'Distance per Instruction:'
+            BoxLayout:
+                orientation: 'vertical'
+                Slider:
+                    id: distanceSlider
+                    min: 15
+                    max: 100
+                    value: 15
+                    size_hint_y: 0.7
+                GridLayout:
+                    size_hint_y: 0.3
+                    rows:1
+                    Label:
+                        text: 'Small Steps (≈10cm @ 40% speed)           '
+                        font_size: 10.5
+                    Label:
+                        text: 'Value: '+ str(int(distanceSlider.value))
+                    Label:
+                        text: '         Large Steps (≈150cm @ 40% speed)'
+                        font_size: 10.5
+            Label:
+                text: 'Trim:'
+            BoxLayout:
+                orientation: 'vertical'
+                Slider:
+                    id: trimSlider
+                    min: -100
+                    max: 100
+                    value: 0
+                    size_hint_y: 0.7
+                GridLayout:
+                    size_hint_y: 0.3
+                    rows:1
+                    Label:
+                        text: 'Left'
+                    Button:
+                        text: 'Reset'
+                        on_press: root.resetTrim()
+                    Label:
+                        text: 'Right'
+            Label:
+                text: "Turning Trim"
+            BoxLayout:
+                orientation: 'vertical'
+                Slider:
+                    id: turnTrimSlider
+                    min: 120
+                    max: 220
+                    value: 159
+                    size_hint_y: 0.7
+                GridLayout:
+                    size_hint_y: 0.3
+                    rows:1
+                    Label:
+                        text: 'Lower turn angle'
+                    Label:
+                        text: 'Value: ' + str(int(turnTrimSlider.value)) + '*\n*Not in degrees'
+                        halign: 'center'
+                    Label:
+                        text: 'Higher turn angle'
+            Label:
+                text: 'Light On:'
+            CheckBox:
+                id: lightOnButton
+                active: True
+        Label:
+            text: 'Value: ' + str(int(trimSlider.value))
+            font_size: 14
+            pos_hint: {'center_x': 0.699, 'center_y':0.476}
+        Button:
+            size_hint:0.2, 0.12
+            pos_hint: {'center_x': 0.5, 'center_y':0.08}
+            text:'Save Settings'
+            on_press: root.saveButtonPressed()
+<controlPage>:
+    connectionMessage: connectionMessage
+    connectButton: connectButton
+    commandsLabel: commandsLabel
+    canvas.before:
+        Rectangle:
+            size: root.size
+            pos: root.pos
+            source: "ControlPageBackground.jpg"
+        Color:
+            rgba: 0,0,0,1
+        Rectangle:
+            size: root.width*0.335, root.height*0.65
+            pos: root.width-root.width*0.335, root.height-root.height*0.65
+    FloatLayout:
+        size: root.width, root.height
+        Label:
+            id: commandsLabel
+            text: ""
+            text_size: root.width*0.29, root.height*0.49
+            valign: 'top'
+            pos_hint: {'center_x':0.84, 'center_y': 0.57}
+            font_size: ((self.text_size[0]*self.text_size[1])/(self.text_size[0]+self.text_size[1]))*0.13
+        Button:
+            background_normal:"UpArrow.png"
+            background_down: "UpArrow_down.png"
+            size_hint: 0.2, 0.35
+            pos_hint: {'center_x':0.5+root.x_offset, 'center_y':((0.82/2)+0.17)}
+            on_press: root.forwardButtonPressed()
+        Button:
+            background_normal: "DownArrow.png"
+            background_down: "DownArrow_down.png"
+            size_hint: 0.2, 0.35
+            pos_hint: {'center_x':0.5+root.x_offset, 'center_y':((0.82/2)-0.17)}
+            on_press: root.backwardButtonPressed()
+        Button:
+            background_normal: "RightArrow.png"
+            background_down: "RightArrow_down.png"
+            size_hint: 0.22, 0.26
+            pos_hint: {'center_x':0.67+root.x_offset, 'center_y':(0.82/2)}
+            on_press: root.rightButtonPressed()
+        Button:
+            background_normal: "LeftArrow.png"
+            background_down: "LeftArrow_down.png"
+            size_hint: 0.22, 0.26
+            pos_hint: {'center_x':0.33+root.x_offset, 'center_y':(0.82/2)}
+            on_press: root.leftButtonPressed()
+        Button:
+            background_normal: "Spin.png"
+            background_down: "Spin_down.png"
+            size_hint: 0.2, 0.275
+            pos_hint: {'center_x':0.3+root.x_offset, 'center_y':(0.82/2)-0.26}
+            on_press: root.spinButtonPressed()
+        Button:
+            background_normal: "Backspace.png"
+            background_down: "Backspace_down.png"
+            size_hint: 0.185, 0.22
+            pos_hint:{'center_x':0.7+root.x_offset, 'center_y': 0.7}
+            on_press: root.backspaceButtonPressed()
+        Button:
+            background_normal: "PlayButton.png"
+            background_down: "PlayButton_down.png"
+            text: "Run     "
+            font_size: 21
+            size_hint: None, None
+            size: root.height*0.27, root.height*.245
+            pos_hint:{'center_x': 0.72, 'center_y': 0.24}
+            on_press: root.runButtonPressed()
+        Button:
+            background_normal: "Delete.png"
+            background_down: "Delete_down.png"
+            font_size: 21
+            size_hint: None, None
+            size: root.height*0.27, root.height*0.27
+            pos_hint:{'center_x': 0.92, 'center_y': 0.1}
+            on_press: root.deleteAllButtonPressed()
+        Label:
+            id: connectionMessage
+            text: ""
+            halign: 'center'
+            font_size: 40
+            pos_hint: {'center_x':0.5, 'center_y':0.73}
+        ActionBar:
+            size_hint_y: 0.18
+            pos_hint: {'center_x':0.5, 'top': 1}
+            ActionView:
+                spacing: 30
+                ActionPrevious:
+                    title:'RoboRoller Control App'
+                    app_icon: "AppIcon.png"
+                    with_previous: False
+                ActionButton:
+                    id: connectButton
+                    text: 'CONNECT'
+                    on_press: root.connectButtonPressed()
+                ActionButton:
+                    icon: "InfoIcon.png"
+                    on_press: root.infoButtonPressed()
+                ActionButton:
+                    icon: 'SettingsCog.png'
+                    on_press: root.settingsCogPressed()
+
+<connectionErrorPage>:
+    FloatLayout:
+        size: root.width, root.height
+        Label:
+            text: "Your RoboRoller was not found.\nMake sure it is turned on and connected to the device in Bluetooth settings."
+            halign: 'center'
+            font_size: 22
+            pos_hint: {'center_x':0.5, 'center_y':0.7}
+        Button:
+            text:"Ok"
+            size_hint: 0.3,0.15
+            pos_hint: {'center_x':0.5, 'center_y':0.3}
+            on_press: root.goBack()
